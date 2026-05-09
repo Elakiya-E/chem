@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1e293b;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --card: #f8fafc;
+  --card-foreground: #1e293b;
+  --border: #e2e8f0;
+  --ring: #3b82f6;
+  --accent: #f1f5f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-accent: var(--accent);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.test-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.option-btn {
+  @apply w-full text-left p-5 rounded-2xl border-2 transition-all flex items-center gap-4 mb-4;
+  border-color: #f1f5f9;
+  background-color: #ffffff;
+}
+
+.option-btn:hover {
+  @apply border-blue-200 bg-blue-50/30;
+}
+
+.option-btn.active {
+  @apply border-blue-600 bg-blue-50 shadow-sm;
+}
+
+.gradient-heading {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600;
+}
