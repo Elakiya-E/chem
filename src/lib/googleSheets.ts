@@ -1,9 +1,5 @@
 export async function sendToGoogleSheets(sheetName: string, data: any) {
-    const url = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-    if (!url) {
-        console.warn('GOOGLE_SCRIPT_URL not found in environment variables');
-        return null;
-    }
+    const url = "https://script.google.com/macros/s/AKfycbyuIH97wIqmlMz8Z9qrk7Pk6VWK-1s6b3m4tE_VaIYeE8G1QE8_1Yo1FqZgI0G3mu7Z/exec";
 
     try {
         const response = await fetch(url, {
@@ -28,11 +24,7 @@ export async function sendToGoogleSheets(sheetName: string, data: any) {
 }
 
 export async function fetchFromGoogleSheets(sheetName: string) {
-    const url = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-    if (!url) {
-        console.warn('GOOGLE_SCRIPT_URL not found in environment variables');
-        return [];
-    }
+    const url = "https://script.google.com/macros/s/AKfycbyuIH97wIqmlMz8Z9qrk7Pk6VWK-1s6b3m4tE_VaIYeE8G1QE8_1Yo1FqZgI0G3mu7Z/exec";
 
     try {
         const response = await fetch(`${url}?operation=fetch&sheetName=${sheetName}`, {
