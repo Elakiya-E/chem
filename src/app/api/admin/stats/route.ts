@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import { Student, Result, Question } from '@/lib/models';
+import { fetchFromGoogleSheets } from '@/lib/googleSheets';
 import { adminAuth } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -8,18 +7,20 @@ export async function GET(req: NextRequest) {
         const auth = await adminAuth(req);
         if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-        await dbConnect();
+        const students = await fetchFromGoogleSheets('Students');
+        const results = await fetchFromGoogleSheets('Results');
 
-        const totalStudents = await Student.countDocuments();
-        const results = await Result.find();
-
+        const totalStudents = students.length;
         const averageMarks = results.length > 0
-            ? results.reduce((acc, curr) => acc + curr.totalMarks, 0) / results.length
+            ? results.reduce((acc: number, curr: any) => acc + curr.totalMarks, 0) / results.length
             : 0;
 
-        const difficultyStats = await Student.aggregate([
-            { $group: { _id: '$difficultyLevel', count: { $sum: 1 } } }
-        ]);
+        // Group students by level manually
+        const levels = ['Beginner', 'Intermediate', 'Advanced'];
+        const difficultyStats = levels.map(level => ({
+            _id: level,
+            count: students.filter((s: any) => s.difficultyLevel === level).length
+        }));
 
         const performanceLevels = {
             Beginner: { avg: 0, count: 0 },
@@ -27,10 +28,9 @@ export async function GET(req: NextRequest) {
             Advanced: { avg: 0, count: 0 }
         };
 
-        // Need to join results with students to get level-wise performance
-        const detailedResults = await Result.find().populate('studentId');
-        detailedResults.forEach((res: any) => {
-            const level = res.studentId?.difficultyLevel;
+        results.forEach((res: any) => {
+            const student = students.find((s: any) => s.id === res.studentId);
+            const level = student?.difficultyLevel;
             if (level && performanceLevels[level as keyof typeof performanceLevels]) {
                 performanceLevels[level as keyof typeof performanceLevels].avg += res.percentage;
                 performanceLevels[level as keyof typeof performanceLevels].count += 1;
