@@ -40,16 +40,10 @@ export default function RegisterPage() {
                 localStorage.setItem('studentName', formData.name);
                 router.push('/difficulty');
             } else {
-                console.error("Registration failed, but proceeding for demo:", data);
-                localStorage.setItem('studentId', 'demo-id');
-                localStorage.setItem('studentName', formData.name);
-                router.push('/difficulty');
+                alert(`Registration failed: ${data.error || 'Server error'}. Please try again.`);
             }
         } catch (error: any) {
-            console.error("Network error, but proceeding for demo:", error);
-            localStorage.setItem('studentId', 'demo-id');
-            localStorage.setItem('studentName', formData.name);
-            router.push('/difficulty');
+            alert(`Network error: ${error.message}. Please check your connection.`);
         } finally {
             setLoading(false);
         }

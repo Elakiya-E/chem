@@ -90,14 +90,20 @@ export default function TestPage() {
                     timeTaken
                 })
             });
-
-            // For layout demo, always proceed to success
-            router.push('/success');
-        } catch (error) {
-            console.error("Submission failed, but proceeding for demo:", error);
-            router.push('/success');
+            const data = await res.json();
+            if (res.ok) {
+                router.push('/success');
+            } else {
+                alert(`Test submission failed: ${data.error || 'Server error'}. Please try again.`);
+                setSubmitted(false);
+                setLoading(false);
+            }
+        } catch (error: any) {
+            alert(`Network error during submission. Please try again.`);
+            setSubmitted(false);
+            setLoading(false);
         }
-    }, [answers, router, submitted, timeLeft]);
+    }, [answers, router, submitted, timeLeft, questions]);
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
